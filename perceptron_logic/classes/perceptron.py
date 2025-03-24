@@ -27,6 +27,7 @@ class Perceptron:
   def train(self, training_data, expected_output):
     for epoch in range(self.epochs):
       total_error = 0
+      
       for inputs, expected in zip(training_data, expected_output):
         output = self.predict(inputs)
         error = expected - output
@@ -34,4 +35,5 @@ class Perceptron:
         self.bias += self.learning_rate * error
         total_error = abs(error)
       if total_error < 1e-5:
+        return epoch + 1
         break 
