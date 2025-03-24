@@ -1,0 +1,23 @@
+name: Delete feature branches after merge
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - qa
+jobs: 
+  delete-feature-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Delete feature branches
+        run: |
+          git fetch --prune
+          for branch in $(git branch -r | grep 'origin/feature/' | sed 's/origin\///'); do
+            git push https://x-access-token:${GH_TOKEN}@github.com/Ludwinghc/four-neuron-perceptron.git --delete "$branch" || true
+          done
