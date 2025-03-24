@@ -17,11 +17,15 @@ class Perceptron:
     # Devuelve el valor aplicado de la TANGENTE HIPERBOLICA al resultado de la operación del perceptron
     return np.tanh(x)
   
+  # Declaración del metodo para Redondear el resultado
+  def  threshold(self, x):
+    return 1 if x >= 0 else -1
+
   # Declaración del metodo para calcular la salida de la neurona
   def predict(self, inputs):
     # Operación del algoritmo del perceptron
     net_input = np.dot(inputs, self.weights) + self.bias
-    return self.activation_function(net_input)
+    return self.threshold(self.activation_function(net_input))
   
   # Declaración del metodo para el entrenamiento de la neurona
   def train(self, training_data, expected_output):
