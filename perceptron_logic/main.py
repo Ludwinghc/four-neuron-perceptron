@@ -15,8 +15,8 @@ def main():
 
   # Entrenamiento de la neurona:
   print(f"\n Entrenando a la neurona")
-  perceptron.train(trainning_data, expected_outputs)
-  print(f"\n Entrenamiento de la neurona finalizado")
+  epoch = perceptron.train(trainning_data, expected_outputs)
+  print(f"\n Entrenamiento de la neurona finalizado con {epoch} iteraciones")
 
   # Evaluación de la neurona
   print(f"\n evaluación de la neurona")
