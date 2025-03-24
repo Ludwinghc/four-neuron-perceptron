@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Neuron Simulator {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <!-- Title row-->
+  <div class="row">
+    <h1 class="text-center">Neuron's Practical Exam</h1>
+  </div>
+  <!-- Training Data  row-->
+  <div class="row gx-5 mt-5">
+    <div class="col-md-4 col-sm-12">
+      <h2 class="text-center text-info">Training Data</h2>
+      <p class="text-center">this is the Training Data used in this practical exam.</p>
+    </div>
+    <div class="col-md-8 col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-sm">
+          <thead>
+            <tr>
+              <th class="text-info text-center" scope="col">Input #1</th>
+              <th class="text-info text-center" scope="col">Input #2</th>
+              <th class="text-info text-center" scope="col">Input #3</th>
+              <th class="text-info text-center" scope="col">Input #4</th>
+              <th class="text-info text-center" scope="col" style="width: 40%">Expected Output</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for row in training_data %}
+            <tr>
+              {% for value in row %}
+              <td class="text-center">{{ value }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Training Form Row -->
+  <div class="row gx-5 mt-5 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+      <form method="POST" id="form1" class="mb-3">
+        {% csrf_token %}
+        <button class="btn btn-warning btn-lg" type="submit" name="boton_mensaje" id="boton_mensaje">Train neuron</button>
+      </form>
+      {% if mensaje %}
+      <div class="d-flex justify-content-center">
+        <p class="message fs-1 fw-bold text-center">{{ mensaje }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Evaluate Form Row -->
+
+  <div class="row mt-5 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <form method="POST" id="form2" class="text-center">
+        {% csrf_token %}
+        <div class="row justify-content-center mb-3">
+          <div class="col-10 col-sm-8">
+            <div class="row row-cols-2 g-2">
+              <div class="col">
+                <input class="form-control form-control-sm" type="text" placeholder="Input 1" name="input1" id="input1" aria-label="Input 1">
+              </div>
+              <div class="col">
+                <input class="form-control form-control-sm" type="text" placeholder="Input 2" name="input2" id="input2" aria-label="Input 2">
+              </div>
+              <div class="col">
+                <input class="form-control form-control-sm" type="text" placeholder="Input 3" name="input3" id="input3" aria-label="Input 3">
+              </div>
+              <div class="col">
+                <input class="form-control form-control-sm" type="text" placeholder="Input 4" name="input4" id="input4" aria-label="Input 4">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <button class="btn btn-success btn-lg" type="submit" name="boton_otro" id="boton_otro">
+              Evaluate
+            </button>
+          </div>
+        </div>
+      </form>
+
+      {% if otro_mensaje %}
+      <div class="text-center mt-3">
+        <p class="message fs-1 fw-bold text-center">{{ otro_mensaje }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}
