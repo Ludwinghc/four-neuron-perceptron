@@ -1,56 +1,52 @@
-# Importación de los modulos necesarios para las vistas
+"""
+View para el entrenamiento y evaluación de la neurona de cuatro entradas
+"""
 from django.shortcuts import render
-
-# Importación de librerias
 import numpy as np
-
-# Llamado a las clases
 from .services import Dataset, Perceptron, NeuralEvaluator
+# Variable global para mantener la percistencia del perceptron durante la ejecución
+global_perceptron = None
 
-# Definición de la view Home
 def Home(request):
-	# Declaración de las variables para mostrar los mensajes
+	
+	global global_perceptron
 	mensaje = ""
 	otro_mensaje = ""
-	# Declaración de la instancia de la clase DataSet
+
+	# Carga y preparación de la data de entrenamiento
 	dataset = Dataset()
 	training_data, expected_output = dataset.get_data()
-	# combinación de las listas para visualizar la base de conocimientos en la plantilla
 	data_combined = [list(row) + [expected_output[idx]] for idx, row in enumerate(training_data)]
-	# Intentar recuperar el perceptrón de la sesión
-	perceptron = None
-	if "perceptron_weights" in request.session:
-			weights = np.array(request.session["perceptron_weights"])
-			bias = request.session["perceptron_bias"]
-			perceptron = Perceptron(input_size=4)
-			perceptron.weights = weights
-			perceptron.bias = bias
-	else:
-			perceptron = Perceptron(input_size=4)
-	# condicional para ejecutarse con el metodo post del formulario
+	
+	# Inicializar el perceptron si aun no existe
+	if global_perceptron is None:
+		global_perceptron = Perceptron(input_size=4)
+
+	# Manejo de peticiones POST
 	if request.method == 'POST':
-			# Condicional para el boton de entrenamiento
+			# Entrenamiento de la neurona
 			if "boton_mensaje" in request.POST:
 					# Entrenamiento de la neurona
-					epoch = perceptron.train(training_data, expected_output)
+					epoch = global_perceptron.train(training_data, expected_output)
 					mensaje = f"Neuron's training finished with {epoch} iterations"
-					
-					# Guardar pesos en la sesión
-					request.session["perceptron_weights"] = perceptron.weights.tolist()
-					request.session["perceptron_bias"] = perceptron.bias
-			# Condicional apra la evaluación de la neurona
+
+			# Evaluación de la neurona
 			elif "boton_otro" in request.POST:
-					# Obtencion de los inputs del fomulario
-					user_inputs = np.array([
-							float(request.POST.get('input1')),
-							float(request.POST.get('input2')),
-							float(request.POST.get('input3')),
-							float(request.POST.get('input4'))
-					])
-					# Llamado a la clase Evaluador para la neurona
-					evaluator = NeuralEvaluator(perceptron)
-					result = evaluator.evaluate(user_inputs)
-					otro_mensaje = f"Neuron Output: {result}"
+					if global_perceptron is None:
+						otro_mensaje = "Error: Train the neuron first!"
+					else:
+						try:
+							user_inputs = np.array([
+								float(request.POST.get('input1')),
+								float(request.POST.get('input2')),
+								float(request.POST.get('input3')),
+								float(request.POST.get('input4'))
+							])
+							evaluator = NeuralEvaluator(global_perceptron)
+							result = evaluator.evaluate(user_inputs)
+							otro_mensaje = f"Neuron Output: {result}"
+						except (TypeError, ValueError):
+							otro_mensaje = "Error: Invalid input values"
 
 	return render(request, "pages/home.html",
 								{

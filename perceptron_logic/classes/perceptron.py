@@ -25,19 +25,21 @@ class Perceptron:
   def predict(self, inputs):
     # Operación del algoritmo del perceptron
     net_input = np.dot(inputs, self.weights) + self.bias
-    return self.threshold(self.activation_function(net_input))
+    raw_output = self.activation_function(net_input)
+    return 1 if raw_output >= 0 else -1
   
   # Declaración del metodo para el entrenamiento de la neurona
   def train(self, training_data, expected_output):
     for epoch in range(self.epochs):
       total_error = 0
-      
+      print(f"Epoca # {epoch}")
       for inputs, expected in zip(training_data, expected_output):
         output = self.predict(inputs)
         error = expected - output
         self.weights += self.learning_rate * error * np.array(inputs)
         self.bias += self.learning_rate * error
-        total_error = abs(error)
-      if total_error < 1e-5:
+        total_error += abs(error)
+        print(f"salida: {output} \n Error: {error} \n Error total: {total_error}")
+      if total_error < 0.1:
         return epoch + 1
-        break 
+    return self.epochs

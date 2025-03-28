@@ -41,7 +41,7 @@ class Perceptron:
     self.learning_rate = learning_rate
     self.epochs = epochs
     self.weights = np.random.uniform(-1, 1, input_size)
-    self.bias =  np.random.uniform(-1,1)
+    self.bias = np.random.uniform(-1,1)
   
   # Declaración del metodo para la función de activación
   def activation_function(self, x):
@@ -56,12 +56,13 @@ class Perceptron:
   def predict(self, inputs):
     # Operación del algoritmo del perceptron
     net_input = np.dot(inputs, self.weights) + self.bias
-    return self.threshold(self.activation_function(net_input))
+    raw_output = self.activation_function(net_input)
+    return self.threshold(raw_output)
   
   # Declaración del metodo para el entrenamiento de la neurona
   def train(self, training_data, expected_output):
-    min_epochs = 10
     for epoch in range(self.epochs):
+      print(f"Epoca # {epoch}")
       total_error = 0
       for inputs, expected in zip(training_data, expected_output):
         output = self.predict(inputs)
@@ -69,9 +70,8 @@ class Perceptron:
         self.weights += self.learning_rate * error * np.array(inputs)
         self.bias += self.learning_rate * error
         total_error += abs(error)
-      if epoch >= min_epochs and total_error < 1e-3:
+      if total_error < 0.1:
         return epoch + 1
-    
     return self.epochs
 
 
