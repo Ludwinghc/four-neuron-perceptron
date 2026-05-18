@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: four-neuron-perceptron
+  title: four-neuron-perceptron
+  description: Script para entender como funciona las redes neuronales en la Inteligencia Artificial
+  annotations:
+    github.com/project-slug: Ludwinghc/four-neuron-perceptron
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/source-location: url:https://github.com/Ludwinghc/four-neuron-perceptron/tree/master/
+  tags:
+    - backend
+    - python
+spec:
+  type: website
+  lifecycle: production
+  owner: user:default/ludwinghc
